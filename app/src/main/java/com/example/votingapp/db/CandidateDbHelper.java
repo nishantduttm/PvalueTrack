@@ -21,6 +21,7 @@ import com.reinaldoarrosi.android.querybuilder.sqlite.criteria.Criteria;
 import com.reinaldoarrosi.android.querybuilder.sqlite.projection.Projection;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -180,7 +181,9 @@ public class CandidateDbHelper extends SQLiteOpenHelper {
             } while (cursorCandidates.moveToNext());
         }
         cursorCandidates.close();
-        return new ArrayList<>(values);
+        List<String> acCodeList = new ArrayList<>(values);
+        acCodeList.sort(Comparator.comparing(Integer::parseInt));
+        return acCodeList;
     }
 
     public List<String> getAllACNames(String electionCode) {
