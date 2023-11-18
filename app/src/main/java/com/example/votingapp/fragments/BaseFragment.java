@@ -27,6 +27,7 @@ import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class BaseFragment extends Fragment {
 
@@ -118,6 +119,13 @@ public class BaseFragment extends Fragment {
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         currentActivity.finish();
         startActivity(myIntent);
+    }
+
+    public static void log(String tag, String message){
+        Log.d(tag, message);
+        FirebaseCrashlytics firebaseCrashlytics  = FirebaseCrashlytics.getInstance();
+        String[] messageparts = message.split(" ", 2);
+        firebaseCrashlytics.setCustomKey(messageparts[0], messageparts[1]);
     }
 
 }

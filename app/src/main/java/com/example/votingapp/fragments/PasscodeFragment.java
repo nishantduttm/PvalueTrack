@@ -118,6 +118,12 @@ public class PasscodeFragment extends BaseFragment {
         for(int i = 0; i < passcodeEditTexts.length - 1; i++){
             final EditText editText = passcodeEditTexts[i];
             final EditText nextEditText = passcodeEditTexts[i + 1];
+            final EditText previousEditText;
+            if(i > 0) {
+                 previousEditText = passcodeEditTexts[i - 1];
+            }else{
+                previousEditText = null;
+            }
             passcodeEditTexts[i].addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -133,6 +139,11 @@ public class PasscodeFragment extends BaseFragment {
                 public void afterTextChanged(Editable s) {
                     if(editText.getText().toString().trim().length() == 1) {
                         nextEditText.requestFocus();
+                    }
+                    if(editText.getText().toString().trim().length() == 0) {
+                        if(previousEditText != null){
+                            previousEditText.requestFocus();
+                        }
                     }
                 }
             });
@@ -153,6 +164,10 @@ public class PasscodeFragment extends BaseFragment {
                 if(passcodeEditTexts[passcodeEditTexts.length - 1].getText().toString().trim().length() == 1) {
                     submitButton.requestFocus();
                 }
+                if(passcodeEditTexts[passcodeEditTexts.length - 1].getText().toString().trim().length() == 0){
+                    passcodeEditTexts[passcodeEditTexts.length - 2].requestFocus();
+                }
+
             }
         });
     }
@@ -289,6 +304,7 @@ public class PasscodeFragment extends BaseFragment {
                 if(!isValidPasscode) {
                     makeToast("Passcode is incorrect");
                 }
+                passcodeEditTexts[0].requestFocus();
             }else if(responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE){
                 authHelper.clear();
                 makeToast("Session expired!!! Login Again..");

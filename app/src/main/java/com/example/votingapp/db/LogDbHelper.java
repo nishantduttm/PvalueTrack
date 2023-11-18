@@ -19,8 +19,14 @@ import com.reinaldoarrosi.android.querybuilder.sqlite.QueryBuilder;
 import com.reinaldoarrosi.android.querybuilder.sqlite.criteria.Criteria;
 import com.reinaldoarrosi.android.querybuilder.sqlite.projection.Projection;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.zip.DataFormatException;
 
 public class LogDbHelper extends SQLiteOpenHelper {
 
@@ -52,7 +58,7 @@ public class LogDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE + " ("
                 + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + TIMESTAMP+" DATETIME DEFAULT CURRENT_TIMESTAMP, "
+                + TIMESTAMP+" DATETIME DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')), "
                 + USER + " TEXT,"
                 + AC_NAME + " TEXT,"
                 + AC_CODE + " TEXT,"
@@ -120,7 +126,7 @@ public class LogDbHelper extends SQLiteOpenHelper {
                         cursor.getString(3),
                         cursor.getString(4),
                         cursor.getInt(5),
-                        cursor.getString(6));
+                        toIstTime(cursor.getString(6)));
                 logEntries.add(logEntry);
             } while (cursor.moveToNext());
         }
@@ -138,5 +144,19 @@ public class LogDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE);
         onCreate(db);
+    }
+
+    private String toIstTime(String timestamp){
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        // Or whatever IST is supposed to be
+        try {
+            Date date = formatter.parse(timestamp);
+            formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT+5:30"));
+            return formatter.format(date);
+        }catch (ParseException dataFormatException){
+            return "";
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.votingapp.ApiLib;
 
 
 import static com.example.votingapp.constants.Constants.CONNECTION_TIME_OUT;
+import static com.example.votingapp.fragments.BaseFragment.log;
 
 import android.content.Context;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import com.example.votingapp.model.Token;
 import com.example.votingapp.model.User;
 import com.example.votingapp.model.UserSignUp;
 import com.example.votingapp.utils.AuthHelper;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -56,6 +58,8 @@ public class NetworkRequest {
 
     private static NetworkRequest sInstance;
 
+    private FirebaseCrashlytics crashlytics;
+
 
     private NetworkRequest() {
         mClient = new OkHttpClient.Builder()  .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
@@ -64,6 +68,7 @@ public class NetworkRequest {
                 .retryOnConnectionFailure(true)
                 .build();
         onGoingCalls = new ArrayList<>();
+        crashlytics = FirebaseCrashlytics.getInstance();
     }
 
     public void cancelOngoingRequests(){
@@ -106,7 +111,7 @@ public class NetworkRequest {
         setCallback(callback);
         String body = new Gson().toJson(roundUpdate);
         String loginUrl = BASE_URL + "roundupdate";
-        Log.d("info", "doUpdateRound: "+body);
+        log("info", "doUpdateRound: "+body);
         doPostRequestWithToken(token.getIdToken(), loginUrl, body, callback);
     }
 
@@ -161,7 +166,7 @@ public class NetworkRequest {
         setCallback(callback);
         String body = new Gson().toJson(userSignUp);
         String loginUrl = BASE_URL + "addauditor";
-        Log.d("info", "doSignUp: "+body);
+        log("info", "doSignUp: "+body);
         doPostRequestWithToken(token.getIdToken(), loginUrl, body, callback);
     }
 
@@ -258,7 +263,7 @@ public class NetworkRequest {
             @Override
             public void onFailure(Call call, final IOException e) {
                 onGoingCalls.remove(call);
-                Log.d("info", "onResponse: "+e.toString());
+                log("info", "onResponse: "+e.toString());
                 if (callback != null) {
                     mainHandler.post(new Runnable() {
                         @Override
@@ -272,19 +277,14 @@ public class NetworkRequest {
             @Override
             public void onResponse(final Call call, final Response response) {
                 onGoingCalls.remove(call);
-                Log.d("info", "onResponse: "+response.toString());
+                log("info", "onResponse: "+response.toString());
                 if (callback != null) {
                     try {
                         final String stringResponse = response.body().string();
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
-<<<<<<< Updated upstream
-                                Object res = buildObjectFromResponse(stringResponse, callback.type());Log.d("info", "run: "+stringResponse);
-=======
-                                Object res = buildObjectFromResponse(stringResponse, callback.type());
-                                log("info", "run: "+stringResponse);
->>>>>>> Stashed changes
+                                Object res = buildObjectFromResponse(stringResponse, callback.type());log("info", "run: "+stringResponse);
                                 if (res != null) {
                                     callback.onResponse(response.code(), res);
                                 } else {
@@ -300,7 +300,7 @@ public class NetworkRequest {
                             }
                         });
                     } catch (final IOException e){
-                        Log.d("info", "onResponse: "+ e.toString());
+                        log("info", "onResponse: "+ e.toString());
                     }
                 }
             }
