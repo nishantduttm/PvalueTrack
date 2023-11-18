@@ -529,7 +529,7 @@ public class RoundUpdate extends BaseFragment {
         @Override
         public void onResponse(int responseCode, @NonNull String response) {
             mProgressDialog.dismiss();
-            Log.d("info", "onResponse Round Update: " + response.toString());
+            log("info", "onResponse Round Update: " + response.toString());
             if (responseCode == Constants.SUCCESS_RESPONSE_CODE) {
                 prefHelper.saveACDetails(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getACName());
                 logDbHelper.saveLog(new LogEntry(
@@ -588,7 +588,7 @@ public class RoundUpdate extends BaseFragment {
                 openLoginActivity();
 
             }
-            Log.d("info", "onResponse: " + Arrays.toString(lastRoundDataList));
+            log("info", "onResponse: " + Arrays.toString(lastRoundDataList));
             RoundUpdate.this.lastRoundDataList = lastRoundDataList;
             setRoundNoText();
         }
