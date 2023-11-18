@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +68,9 @@ public class NetworkRequest {
 
     public void cancelOngoingRequests(){
         for(Call call : onGoingCalls){
-            call.cancel();
+            if(!call.isCanceled()) {
+                call.cancel();
+            }
         }
     }
 
@@ -284,13 +287,15 @@ public class NetworkRequest {
                                 }
                             }
                         });
-                    } catch (final IOException ioe) {
+                    } catch (final UnknownHostException ioe) {
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 callback.onError(Constants.INTERNET_UNAVAILABLE, "Please check your internet connection");
                             }
                         });
+                    } catch (final IOException e){
+                        Log.d("info", "onResponse: "+ e.toString());
                     }
                 }
             }
