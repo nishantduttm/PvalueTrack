@@ -60,6 +60,8 @@ public class NetworkRequest {
     
     private FirebaseCrashlytics crashlytics;
 
+    private FirebaseCrashlytics crashlytics;
+
 
     private NetworkRequest() {
         mClient = new OkHttpClient.Builder()  .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
@@ -268,7 +270,7 @@ public class NetworkRequest {
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onError(Constants.INTERNET_UNAVAILABLE, "Please check your internet connection");
+                            log("info", e.toString());
                         }
                     });
                 }
