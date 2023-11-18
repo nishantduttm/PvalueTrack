@@ -200,7 +200,7 @@ public class RoundUpdate extends BaseFragment {
                         if (partyCodes.size() == 1) {
                             pCodeTextView.setText(partyCodes.get(0));
                         } else {
-                            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, partyCodes);
+                            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, partyCodes);
                             pCodeTextView.setAdapter(partyCodeAdapter);
                         }
                     } else {
@@ -210,9 +210,9 @@ public class RoundUpdate extends BaseFragment {
                             String candidate = candidateDbHelper.findCandidateNamesByPartyCodeAndACCode(autoCompleteTextViews.getPartyCode(), autoCompleteTextViews.getACCode());
                             candidateNameTextView.setText(candidate);
                         } else {
-                            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, pCodes);
+                            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, pCodes);
                             pCodeTextView.setAdapter(partyCodeAdapter);
-                            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, candidateDbHelper.findCandidateNameByPartyNameAndACCode(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getPartyName()));
+                            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findCandidateNameByPartyNameAndACCode(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getPartyName()));
                             candidateNameTextView.setAdapter(candidateNameAdapter);
                         }
 
@@ -224,30 +224,30 @@ public class RoundUpdate extends BaseFragment {
                 if (partyNames.size() == 1) {
                     pNameTextView.setText(partyNames.get(0));
                 } else {
-                    AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, partyNames);
+                    AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, partyNames);
                     pNameTextView.setAdapter(partyNameAdapter);
                 }
                 if (partyCodes.size() == 1) {
                     pCodeTextView.setText(partyCodes.get(0));
                 } else {
-                    AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, partyCodes);
+                    AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, partyCodes);
                     pCodeTextView.setAdapter(partyCodeAdapter);
                 }
             } else {
-                AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, candidateDbHelper.findPartyNamesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findPartyNamesByACCode(autoCompleteTextViews.getACCode()));
                 pNameTextView.setAdapter(partyNameAdapter);
-                AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, candidateDbHelper.findPartyCodesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findPartyCodesByACCode(autoCompleteTextViews.getACCode()));
                 pCodeTextView.setAdapter(partyCodeAdapter);
-                AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, candidateDbHelper.findCandidateNamesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findCandidateNamesByACCode(autoCompleteTextViews.getACCode()));
                 candidateNameTextView.setAdapter(candidateNameAdapter);
             }
 
         } else {
-            AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, Arrays.asList("No Result"));
+            AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
             pNameTextView.setAdapter(partyNameAdapter);
-            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, Arrays.asList("No Result"));
+            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
             pCodeTextView.setAdapter(partyCodeAdapter);
-            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.getContext(), R.layout.list_item_1, Arrays.asList("No Result"));
+            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
             candidateNameTextView.setAdapter(candidateNameAdapter);
         }
         if (electionCode != null && autoCompleteTextViews.isValidACText()) {

@@ -263,7 +263,7 @@ public class NetworkRequest {
                     mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callback.onError(Constants.INTERNET_UNAVAILABLE, "Please check your internet connection");
+                            log("info", e.toString());
                         }
                     });
                 }
@@ -279,7 +279,12 @@ public class NetworkRequest {
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
+<<<<<<< Updated upstream
                                 Object res = buildObjectFromResponse(stringResponse, callback.type());Log.d("info", "run: "+stringResponse);
+=======
+                                Object res = buildObjectFromResponse(stringResponse, callback.type());
+                                log("info", "run: "+stringResponse);
+>>>>>>> Stashed changes
                                 if (res != null) {
                                     callback.onResponse(response.code(), res);
                                 } else {
