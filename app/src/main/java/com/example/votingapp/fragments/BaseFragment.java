@@ -16,6 +16,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.votingapp.R;
 import com.example.votingapp.screens.LoginSignupScreen;
 import com.example.votingapp.utils.AuthHelper;
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 public class BaseFragment extends Fragment {
 
@@ -49,12 +52,30 @@ public class BaseFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(appUpdater != null) {
+            appUpdater.stop();
+        }
+    }
+
+    private  AppUpdater appUpdater;
+
     private static final String BACK_STACK_ROOT_TAG = "root_fragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =  super.onCreateView(inflater, container, savedInstanceState);
+        appUpdater = new AppUpdater(this.getContext())
+                .setUpdateFrom(UpdateFrom.GITHUB)
+                .setGitHubUserAndRepo("nishantduttm", "PvalueTrack")
+                .setUpdateFrom(UpdateFrom.JSON)
+                .setUpdateXML("https://raw.githubusercontent.com/nishantduttm/PvalueTrack/main/app/update-changelog.json")
+                .setDisplay(Display.DIALOG)
+                .showAppUpdated(true);
+        appUpdater.start();
         if(!AuthHelper.getInstance(this.getContext()).isLoggedIn()){
             openLoginActivity();
         }

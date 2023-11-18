@@ -26,14 +26,6 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder(StrictMode.getVmPolicy())
                 .detectLeakedClosableObjects()
                 .build());
-        new AppUpdater(this)
-                .setUpdateFrom(UpdateFrom.GITHUB)
-                .setGitHubUserAndRepo("nishantduttm", "PvalueTrack")
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateXML("https://raw.githubusercontent.com/javiersantos/AppUpdater/master/app/update.json")
-                .setDisplay(Display.DIALOG)
-                .showAppUpdated(true)
-                .start();
         setContentView(R.layout.activity_main);
         Intent intent = new Intent(MainActivity.this, LoginSignupScreen.class);
         MainActivity.this.finish();
