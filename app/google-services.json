@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "54272048379",
+    "project_id": "pvaluetrack-75d75",
+    "storage_bucket": "pvaluetrack-75d75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54272048379:android:940c5b45a2e2859702045e",
+        "android_client_info": {
+          "package_name": "com.example.votingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1V9DarVD00Tn07pXsNW58HH8z0IDldoc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

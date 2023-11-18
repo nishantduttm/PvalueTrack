@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/timeStampLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time :"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:fontFamily="sans-serif-medium" />
+            <TextView
+                android:id="@+id/timeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time :"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:fontFamily="sans-serif-medium" />
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/acNameTextViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AC Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                android:fontFamily="sans-serif-medium" />
+            <TextView
+                android:id="@+id/acNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AC Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorPrimary"
+                 />
+
+        </LinearLayout>
+        <!-- AC Name -->
+
+        <!-- AC Code -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/acCodeTextViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AC Code: "
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+            <TextView
+                android:id="@+id/acCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AC Code: "
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/partyCodeTextViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Party Code:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+            <TextView
+                android:id="@+id/partyCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Party Code:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary" />
+        </LinearLayout>
+
+        <!-- Party Code -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/partyNameTextViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Party Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+            <TextView
+                android:id="@+id/partyNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Party Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+
+        </LinearLayout>
+
+        <!-- Party Name -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/candidateNameTextViewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Candidate Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:fontFamily="sans-serif-medium"/>
+            <TextView
+                android:id="@+id/candidateNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Candidate Name:"
+                android:textSize="16sp"
+                android:textColor="?android:attr/textColorSecondary" />
+
+        </LinearLayout>
+
+        <!-- Candidate Name -->
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/roundNumberTextViewLabel"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Round No:"
+               android:textSize="16sp"
+               android:textColor="?android:attr/textColorSecondary"
+               android:fontFamily="sans-serif-medium"
+               />
+           <TextView
+               android:id="@+id/roundNumberTextView"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Round No:"
+               android:textSize="16sp"
+               android:textColor="?android:attr/textColorSecondary" />
+
+       </LinearLayout>
+        <!-- Round Number -->
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
