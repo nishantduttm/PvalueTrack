@@ -42,6 +42,7 @@ import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,6 +94,8 @@ public class RoundUpdate extends BaseFragment {
 
     AuthHelper authHelper;
 
+    FirebaseCrashlytics crashlytics;
+
 
     public RoundUpdate() {
         // Required empty public constructor
@@ -127,12 +130,14 @@ public class RoundUpdate extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_round_update, container, false);
         mProgressDialog = new ProgressDialog(this.getContext());
+        crashlytics = FirebaseCrashlytics.getInstance();
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
         candidateDbHelper = new CandidateDbHelper(getContext());
         logDbHelper = new LogDbHelper(getContext());
         prefHelper = new PrefHelper(this.getContext());
         electionCode = prefHelper.getPasscode().getElectionCode();
         authHelper = AuthHelper.getInstance(this.getContext());
+        crashlytics.setCustomKey("isInitialized Passcode:", prefHelper.getPasscode().toString());
         if (!candidateDbHelper.isInitialized(electionCode)) {
             getCandidates();
         } else {
@@ -140,6 +145,7 @@ public class RoundUpdate extends BaseFragment {
             autoCompleteTextViews = new AutoCompleteTextViews(acTextView, acNameTextView, roundNoTextView, pCodeTextView, pNameTextView, candidateNameTextView, candidateDbHelper);
             setUpAutoCompleteTextViews();
         }
+        new KeyboardUtil(getActivity(),view.findViewById(R.id.main_form));
         return view;
     }
 
@@ -390,6 +396,8 @@ public class RoundUpdate extends BaseFragment {
 
 
     public void clearTextViews() {
+        acTextView.setText("");
+        acNameTextView.setText("");
         roundNoTextView.setText("");
         pCodeTextView.setText("");
         pNameTextView.setText("");
@@ -534,7 +542,6 @@ public class RoundUpdate extends BaseFragment {
                         prefHelper.getUserName(),
                         electionCode));
                 clearTextViews();
-                getLastRoundDataList();
                 makeToast(response);
             } else if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
                 makeToast("Session expired!!! Login Again..");

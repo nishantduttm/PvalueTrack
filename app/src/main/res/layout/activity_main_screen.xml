@@ -7,8 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="2dp"
-    tools:context=".screens.MainScreen">
+    tools:context=".screens.MainScreen"
+    android:fillViewport="true">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"

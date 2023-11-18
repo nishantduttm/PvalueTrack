@@ -122,7 +122,7 @@
                     android:textSize="10sp"
                     android:layout_margin="2dp"
                     android:textColor="@color/red"
-                    android:text="Password must contain minimum 8 characters at least 1 Alphabet, 1 Number and 1 Special Character"/>
+                    android:text="Password must contain minimum 8 characters at least 1 Alphabet and 1 Number"/>
 
 
                 <com.google.android.material.textfield.TextInputEditText
