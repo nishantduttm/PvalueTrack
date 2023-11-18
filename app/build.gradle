@@ -23,6 +23,21 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        applicationVariants.all { variant ->
+            variant.outputs.each{
+                    // on below line we are setting a
+                    // name to our apk as GFG.apk
+                output->
+                    def name = "PvalueTrack.apk"
+                    // on below line we are setting the
+                    // outputFile Name to our apk file.
+                    output.outputFileName = name
+            }
+            variant.outputs.all {
+                outputFileName = "../" + outputFileName
+            }
+
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
