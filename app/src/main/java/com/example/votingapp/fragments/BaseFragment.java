@@ -1,8 +1,12 @@
 package com.example.votingapp.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +19,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.votingapp.R;
 import com.example.votingapp.screens.LoginSignupScreen;
+import com.example.votingapp.screens.MainScreen;
 import com.example.votingapp.utils.AuthHelper;
 import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
 
 public class BaseFragment extends Fragment {
 
@@ -40,8 +48,10 @@ public class BaseFragment extends Fragment {
         if(toast != null){
             toast.cancel();
         }
-        toast = Toast.makeText(this.getContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
+        if(isAdded()) {
+            toast = Toast.makeText(this.getContext(), message, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     @Override
@@ -55,9 +65,6 @@ public class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(appUpdater != null) {
-            appUpdater.stop();
-        }
     }
 
     private  AppUpdater appUpdater;
@@ -68,17 +75,39 @@ public class BaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =  super.onCreateView(inflater, container, savedInstanceState);
-        appUpdater = new AppUpdater(this.getContext())
-                .setUpdateFrom(UpdateFrom.GITHUB)
-                .setGitHubUserAndRepo("nishantduttm", "PvalueTrack")
-                .setUpdateFrom(UpdateFrom.JSON)
-                .setUpdateXML("https://raw.githubusercontent.com/nishantduttm/PvalueTrack/main/app/update-changelog.json")
-                .setDisplay(Display.DIALOG)
-                .showAppUpdated(true);
-        appUpdater.start();
         if(!AuthHelper.getInstance(this.getContext()).isLoggedIn()){
             openLoginActivity();
         }
+        new AppUpdaterUtils(getActivity())
+                .setUpdateFrom(UpdateFrom.JSON)
+                .setUpdateJSON("https://raw.githubusercontent.com/nishantduttm/PvalueTrack/main/app/update-changelog.json")
+                .withListener(new AppUpdaterUtils.UpdateListener() {
+                    @Override
+                    public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                        Log.d("Latest Version", update.getLatestVersion());
+                        Log.d("Latest Version Code", update.getLatestVersionCode().toString());
+                        Log.d("Release notes", update.getReleaseNotes());
+                        Log.d("URL", update.getUrlToDownload().toString());
+                        Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
+                        if(isUpdateAvailable){
+                            new AlertDialog.Builder(BaseFragment.this.getActivity())
+                                    .setTitle("Update Available")
+                                    .setMessage("Do you want update app?")
+                                    .setIcon(R.drawable.icon)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(update.getUrlToDownload().toString()));
+                                            startActivity(browserIntent);
+                                        }})
+                                    .setNegativeButton("No", null).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(AppUpdaterError error) {
+                        Log.d("AppUpdater Error", "Something went wrong");
+                    }
+                }).start();
         return v;
     }
 

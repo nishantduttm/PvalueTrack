@@ -36,6 +36,12 @@ import com.example.votingapp.model.Token;
 import com.example.votingapp.utils.AuthHelper;
 import com.example.votingapp.utils.KeyboardUtil;
 import com.example.votingapp.utils.PrefHelper;
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
 
 import java.util.Arrays;
 import java.util.List;
