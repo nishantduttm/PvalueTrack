@@ -344,7 +344,7 @@ public class PasscodeFragment extends BaseFragment {
             workRequest = new PeriodicWorkRequest.Builder(PasscodeValidator.class, 15, TimeUnit.MINUTES).setInputData(data).build();
             final WorkManager mWorkManager = WorkManager.getInstance();
             mWorkManager.enqueueUniquePeriodicWork("passcodeValidator",
-                    ExistingPeriodicWorkPolicy.KEEP,
+                    ExistingPeriodicWorkPolicy.REPLACE,
                     workRequest);
             mWorkManager.getWorkInfoByIdLiveData(workRequest.getId()).observe(this, new Observer<WorkInfo>() {
                 @Override
@@ -353,8 +353,9 @@ public class PasscodeFragment extends BaseFragment {
                         WorkInfo.State state = workInfo.getState();
                         if (state == WorkInfo.State.SUCCEEDED) {
                         } else {
-                            openFragment(PasscodeFragment.newInstance("", ""));
+                            prefHelper.clearPasscodes();
                             mWorkManager.cancelAllWork();
+                            openFragment(PasscodeFragment.newInstance("", ""));
                         }
                     }
                 }

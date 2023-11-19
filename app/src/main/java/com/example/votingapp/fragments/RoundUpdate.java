@@ -137,6 +137,9 @@ public class RoundUpdate extends BaseFragment {
         prefHelper = new PrefHelper(this.getContext());
         electionCode = prefHelper.getPasscode().getElectionCode();
         authHelper = AuthHelper.getInstance(this.getContext());
+        if(prefHelper.getPasscode().getPasscode() == null){
+            openFragment(PasscodeFragment.newInstance("", ""));
+        }
         crashlytics.setCustomKey("isInitialized Passcode:", prefHelper.getPasscode().toString());
         if (!candidateDbHelper.isInitialized(electionCode)) {
             getCandidates();

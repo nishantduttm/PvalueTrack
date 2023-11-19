@@ -1,5 +1,7 @@
 package com.example.votingapp.worker;
 
+import static com.example.votingapp.fragments.BaseFragment.log;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -42,7 +44,7 @@ public class PasscodeValidator extends Worker {
         AuthHelper authHelper = AuthHelper.getInstance(getApplicationContext());
         Passcode[] passcodes = networkRequest.doGetPasscodesSync(new Token(authHelper.getIdToken()));
         if(passcodes != null) {
-            Log.d("info", "doWork: " + Arrays.toString(passcodes));
+            log("info", "doWork: " + Arrays.toString(passcodes));
             for (Passcode passcode : passcodes) {
                 if (passcode.getPasscode().equals(enteredPasscode)) {
                     Data outputData = new Data.Builder().putString(WORK_RESULT, "Jobs Finished").build();
