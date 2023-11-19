@@ -71,7 +71,8 @@ public class LogsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.fragment_logs, container, false);
-        PrefHelper prefHelper = new PrefHelper(getContext());
+        PrefHelper prefHelper = new PrefHelper(getActivity().getApplicationContext());
+        log("info", prefHelper.getPasscode().toString());
         RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
         LogDbHelper logDbHelper = new LogDbHelper(getContext());
         LogsAdapter logsAdapter = new LogsAdapter(logDbHelper.findLogsByUserIdAndElectionCode(prefHelper.getPasscode().getElectionCode(), prefHelper.getUserName()));

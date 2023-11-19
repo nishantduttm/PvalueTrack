@@ -117,7 +117,7 @@ public class MainScreen extends AppCompatActivity {
 
     private void redirectToSignInScreen(){
         AuthHelper.getInstance(MainScreen.this).clear();
-        new PrefHelper(MainScreen.this).clearPasscodes();
+        new PrefHelper(getApplicationContext()).clearPasscodes();
         Intent myIntent = new Intent(MainScreen.this, LoginSignupScreen.class);
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         MainScreen.this.finish();

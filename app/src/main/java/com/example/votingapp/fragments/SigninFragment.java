@@ -96,7 +96,7 @@ public class SigninFragment extends BaseFragment {
         // Inflate the layout for this fragment
         mProgressDialog = new ProgressDialog(getContext());
 
-        prefHelper = new PrefHelper(getContext());
+        prefHelper = new PrefHelper(getActivity().getApplicationContext());
 
         mAuthHelper = AuthHelper.getInstance(getContext());
         mEditEmail = (EditText) v.findViewById(R.id.username);
