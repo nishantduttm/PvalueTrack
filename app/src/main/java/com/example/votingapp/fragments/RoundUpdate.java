@@ -137,7 +137,7 @@ public class RoundUpdate extends BaseFragment {
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
         candidateDbHelper = new CandidateDbHelper(getContext());
         logDbHelper = new LogDbHelper(getContext());
-        prefHelper = new PrefHelper(this.getContext());
+        prefHelper = new PrefHelper(getActivity().getApplicationContext());
         authHelper = AuthHelper.getInstance(this.getContext());
         if(prefHelper.getPasscode().getPasscode() == null){
             log("info", "Starting passcode fragment as passcode is null");

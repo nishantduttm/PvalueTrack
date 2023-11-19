@@ -77,7 +77,7 @@ public class LoginSignupScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_signup_screen);
 
-        prefHelper = new PrefHelper(this);
+        prefHelper = new PrefHelper(getApplicationContext());
 
         mAuthHelper = AuthHelper.getInstance(this);
 

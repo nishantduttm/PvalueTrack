@@ -81,6 +81,8 @@ public class PasscodeFragment extends BaseFragment {
 
     AuthHelper authHelper;
 
+    static boolean isNewPasscodeRequired;
+
     private static final  char BIGGER_DOT = '\u2B24';
 
     public PasscodeFragment() {
@@ -91,16 +93,17 @@ public class PasscodeFragment extends BaseFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param isNewPassCodeRequired Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment PasscodeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PasscodeFragment newInstance(String param1, String param2) {
+    public static PasscodeFragment newInstance(String isNewPassCodeRequired, String param2) {
         PasscodeFragment fragment = new PasscodeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM1, isNewPassCodeRequired);
         args.putString(ARG_PARAM2, param2);
+        isNewPasscodeRequired = isNewPassCodeRequired.equals("true");
         fragment.setArguments(args);
         return fragment;
     }
@@ -220,11 +223,11 @@ public class PasscodeFragment extends BaseFragment {
         super.onAttach(context);
         mainScreenActivity = this.getActivity();
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
-        Passcode savedPasscode = new PrefHelper(this.getContext()).getPasscode();
+        Passcode savedPasscode = new PrefHelper(getActivity().getApplicationContext()).getPasscode();
         mProgressDialog = new ProgressDialog(getContext());
-        prefHelper = new PrefHelper(this.getContext());
+        prefHelper = new PrefHelper(getActivity().getApplicationContext());
         authHelper = AuthHelper.getInstance(this.getContext());
-        if(savedPasscode.getPasscode() != null){
+        if(!isNewPasscodeRequired && savedPasscode.getPasscode() != null){
             enteredPasscode = savedPasscode.getPasscode();
             validatePasscode();
         }
@@ -353,9 +356,9 @@ public class PasscodeFragment extends BaseFragment {
                         WorkInfo.State state = workInfo.getState();
                         if (state == WorkInfo.State.SUCCEEDED) {
                         } else {
-                            prefHelper.clearPasscodes();
+//                            prefHelper.clearPasscodes();
                             mWorkManager.cancelAllWork();
-                            openFragment(PasscodeFragment.newInstance("", ""));
+                            openFragment(PasscodeFragment.newInstance("true", ""));
                         }
                     }
                 }

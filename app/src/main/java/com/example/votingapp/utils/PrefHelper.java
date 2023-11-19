@@ -68,6 +68,7 @@ public class PrefHelper {
     }
 
     public void savePasscode(Passcode passcode){
+        log("info", "saving passcode "+passcode.toString());
         String data = new Gson().toJson(passcode);
         editor.putString(PASSCODE, data);
         editor.apply();
@@ -75,7 +76,7 @@ public class PrefHelper {
 
     public Passcode getPasscode(){
         String data = sharedPreferences.getString(PASSCODE, "");
-        log("info", "getSavedCandidateData: "+data);
+        log("info", "getting passcode "+ data);
         if(!data.equals("")){
             return new Gson().fromJson(data, Passcode.class);
         }
