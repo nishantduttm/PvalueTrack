@@ -57,10 +57,7 @@ public class NetworkRequest {
     private List<Call> onGoingCalls;
 
     private static NetworkRequest sInstance;
-    
-    private FirebaseCrashlytics crashlytics;
 
-    private FirebaseCrashlytics crashlytics;
 
 
     private NetworkRequest() {
@@ -70,7 +67,6 @@ public class NetworkRequest {
                 .retryOnConnectionFailure(true)
                 .build();
         onGoingCalls = new ArrayList<>();
-        crashlytics = FirebaseCrashlytics.getInstance();
     }
 
     public void cancelOngoingRequests(){
