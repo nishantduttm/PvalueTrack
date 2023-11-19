@@ -2,6 +2,7 @@ package com.example.votingapp.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -33,6 +34,8 @@ import com.example.votingapp.model.LastRoundData;
 import com.example.votingapp.model.LogEntry;
 import com.example.votingapp.model.RoundUpdateBody;
 import com.example.votingapp.model.Token;
+import com.example.votingapp.screens.LoginSignupScreen;
+import com.example.votingapp.screens.MainScreen;
 import com.example.votingapp.utils.AuthHelper;
 import com.example.votingapp.utils.KeyboardUtil;
 import com.example.votingapp.utils.PrefHelper;
@@ -135,11 +138,16 @@ public class RoundUpdate extends BaseFragment {
         candidateDbHelper = new CandidateDbHelper(getContext());
         logDbHelper = new LogDbHelper(getContext());
         prefHelper = new PrefHelper(this.getContext());
-        electionCode = prefHelper.getPasscode().getElectionCode();
         authHelper = AuthHelper.getInstance(this.getContext());
         if(prefHelper.getPasscode().getPasscode() == null){
-            openFragment(PasscodeFragment.newInstance("", ""));
+            log("info", "Starting passcode fragment as passcode is null");
+            Intent myIntent = new Intent(getActivity(), LoginSignupScreen.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().finish();
+            startActivity(myIntent);
+            return view;
         }
+        electionCode = prefHelper.getPasscode().getElectionCode();
         crashlytics.setCustomKey("isInitialized Passcode:", prefHelper.getPasscode().toString());
         if (!candidateDbHelper.isInitialized(electionCode)) {
             getCandidates();
