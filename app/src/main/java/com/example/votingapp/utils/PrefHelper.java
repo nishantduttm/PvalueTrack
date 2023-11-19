@@ -1,5 +1,7 @@
 package com.example.votingapp.utils;
 
+import static com.example.votingapp.fragments.BaseFragment.log;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -73,7 +75,7 @@ public class PrefHelper {
 
     public Passcode getPasscode(){
         String data = sharedPreferences.getString(PASSCODE, "");
-        Log.d("info", "getSavedCandidateData: "+data);
+        log("info", "getSavedCandidateData: "+data);
         if(!data.equals("")){
             return new Gson().fromJson(data, Passcode.class);
         }
@@ -119,7 +121,7 @@ public class PrefHelper {
 
     public Candidate[] getSavedCandidateData(){
         String data = sharedPreferences.getString(CANDIDATES, "");
-        Log.d("info", "getSavedCandidateData: "+data);
+        log("info", "getSavedCandidateData: "+data);
         if(!data.equals("")){
             return new Gson().fromJson(data, Candidate[].class);
         }

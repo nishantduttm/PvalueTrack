@@ -109,9 +109,7 @@ public class SigninFragment extends BaseFragment {
         setupView();
 
         if (mAuthHelper.isLoggedIn()) {
-            Intent myIntent = new Intent(getContext(), MainScreen.class);
-            startActivity(myIntent);
-            getActivity().finish();
+            openFragment(PasscodeFragment.newInstance("", ""));
         }
         return v;
     }
