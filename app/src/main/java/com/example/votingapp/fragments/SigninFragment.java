@@ -105,12 +105,7 @@ public class SigninFragment extends BaseFragment {
 
         forgotPasswordLink = v.findViewById(R.id.forgotPasswordTextView);
         signUpLink = v.findViewById(R.id.signUpTextView);
-
         setupView();
-
-        if (mAuthHelper.isLoggedIn()) {
-            openFragment(PasscodeFragment.newInstance("", ""));
-        }
         return v;
     }
 

@@ -97,11 +97,12 @@ public class MainScreen extends AppCompatActivity {
         Intent intent = getIntent();
         String electionCode = intent.getStringExtra(Constants.ELECTION_CODE);
         roundUpdateFragment = com.example.votingapp.fragments.RoundUpdate.newInstance(electionCode, "");
-        openFragment(roundUpdateFragment);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener);
         if(!AuthHelper.getInstance(this).isLoggedIn()){
             redirectToSignInScreen();
+        }else{
+            openFragment(roundUpdateFragment);
         }
     }
 
