@@ -14,13 +14,16 @@ import androidx.work.WorkManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.auth0.android.jwt.BuildConfig;
 import com.example.votingapp.ApiLib.NetworkRequest;
 import com.example.votingapp.MainActivity;
 import com.example.votingapp.R;
@@ -99,6 +102,19 @@ public class MainScreen extends AppCompatActivity {
         roundUpdateFragment = com.example.votingapp.fragments.RoundUpdate.newInstance(electionCode, "");
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener);
+        TextView versionText = (TextView)findViewById(R.id.version_number);
+        versionText.setText(getVersion());
+    }
+
+    private String getVersion(){
+        try{
+            String versionName = "v"+this.getPackageManager()
+                    .getPackageInfo(this.getPackageName(), 0).versionName;
+            return versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 

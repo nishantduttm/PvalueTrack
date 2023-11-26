@@ -2,6 +2,7 @@ package com.example.votingapp.screens;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -76,7 +78,8 @@ public class LoginSignupScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_signup_screen);
-
+        TextView versionText = (TextView)findViewById(R.id.version_number);
+        versionText.setText(getVersion());
         prefHelper = new PrefHelper(getApplicationContext());
 
         mAuthHelper = AuthHelper.getInstance(this);
@@ -86,6 +89,18 @@ public class LoginSignupScreen extends AppCompatActivity {
         }else{
             openFragment(SigninFragment.newInstance("", ""));
         }
+    }
+
+
+    private String getVersion(){
+        try{
+            String versionName = "v"+this.getPackageManager()
+                    .getPackageInfo(this.getPackageName(), 0).versionName;
+            return versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public void openFragment(Fragment fragment) {
