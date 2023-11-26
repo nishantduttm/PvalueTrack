@@ -154,7 +154,6 @@ public class RoundUpdate extends BaseFragment {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
-        NetworkRequest.getInstance().cancelOngoingRequests();
     }
 
     @Override
