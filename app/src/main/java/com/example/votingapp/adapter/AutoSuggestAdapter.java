@@ -84,6 +84,7 @@ public class AutoSuggestAdapter extends ArrayAdapter
             List<String> filterList = (ArrayList) results.values;
             if (results != null && results.count > 0)
             {
+                filterList = new ArrayList<>(filterList);
                 clear();
                 for (String item : filterList)
                 {
