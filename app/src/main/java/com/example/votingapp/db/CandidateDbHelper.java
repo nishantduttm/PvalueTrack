@@ -118,56 +118,9 @@ public class CandidateDbHelper extends SQLiteOpenHelper {
            }
         }
         cursor.close();
+        db.close();
         return isTableInitialized;
     }
-
-    // this method is use to add new course to our sqlite database.
-    public void addCandidate(String electionCode, Candidate[] candidates) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        if(doesTableExist(db, TABLE_NAME)){
-            onCreate(db);
-        }
-        for (Candidate candidate : candidates) {
-            if(candidate.getElectionCode().equals(electionCode)) {
-                ContentValues values = new ContentValues();
-                values.put(ELECTION_CODE, candidate.getElectionCode());
-                values.put(ELECTION_NAME, candidate.getElectionName());
-                values.put(AC_CODE, candidate.getAssemblyConstituencyCode());
-                values.put(AC_NAME, candidate.getAssemblyConstituencyName());
-                values.put(PARTY_CODE, candidate.getPartyCode());
-                values.put(PARTY_NAME, candidate.getPartyName());
-                values.put(CANDIDATE_NAME, candidate.getCandidateName());
-                values.put(CANDIDATE_CODE, candidate.getCandidateCode());
-                db.insert(TABLE_NAME, null, values);
-            }
-        }
-        isInitialized = true;
-    }
-
-    List<Candidate>  getAllCandidates(){
-        QueryBuilder queryBuilder = new QueryBuilder().
-                select(ELECTION_CODE, ELECTION_NAME, AC_CODE, AC_NAME, PARTY_CODE, PARTY_NAME, CANDIDATE_NAME, CANDIDATE_CODE)
-                .from(TABLE_NAME);
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryBuilder.build(), null);
-        List<Candidate> candidates = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                Candidate candidate = new Candidate();
-                candidate.setElectionCode(cursor.getString(0));
-                candidate.setCandidateName(cursor.getString(1));
-                candidate.setAssemblyConstituencyCode(cursor.getString(2));
-                candidate.setAssemblyConstituencyName(cursor.getString(3));
-                candidate.setPartyCode(cursor.getString(4));
-                candidate.setPartyName(cursor.getString(5));
-                candidate.setElectionName(cursor.getString(6));
-                candidate.setCandidateCode(cursor.getInt(7));
-            } while (cursor.moveToNext());
-        }
-        return candidates;
-    }
-
-
 
     public List<String> getAllACCodes(String electionCode) {
         SQLiteDatabase db = this.getReadableDatabase();

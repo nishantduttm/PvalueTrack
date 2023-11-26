@@ -139,7 +139,7 @@ public class MainScreen extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 openFragment(RoundUpdate.newInstance("", ""));
-                                roundUpdateFragment.getCandidates();
+                                roundUpdateFragment.getACList();
                             }})
                         .setNegativeButton("No", null).show();
                 return true;

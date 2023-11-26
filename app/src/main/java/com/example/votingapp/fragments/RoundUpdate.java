@@ -3,48 +3,37 @@ package com.example.votingapp.fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.work.PeriodicWorkRequest;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.votingapp.ApiLib.NetworkRequest;
 import com.example.votingapp.R;
 import com.example.votingapp.UIHelper.AutoCompleteTextViews;
 import com.example.votingapp.adapter.AutoSuggestAdapter;
-import com.example.votingapp.db.CandidateDbHelper;
 import com.example.votingapp.db.LogDbHelper;
 import com.example.votingapp.constants.Constants;
+import com.example.votingapp.model.AssemblyConstituency;
 import com.example.votingapp.model.Candidate;
 import com.example.votingapp.model.LastRoundData;
 import com.example.votingapp.model.LogEntry;
 import com.example.votingapp.model.RoundUpdateBody;
 import com.example.votingapp.model.Token;
 import com.example.votingapp.screens.LoginSignupScreen;
-import com.example.votingapp.screens.MainScreen;
+import com.example.votingapp.utils.ACHelper;
 import com.example.votingapp.utils.AuthHelper;
+import com.example.votingapp.utils.CandidatesListHelper;
 import com.example.votingapp.utils.KeyboardUtil;
 import com.example.votingapp.utils.PrefHelper;
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.AppUpdaterUtils;
-import com.github.javiersantos.appupdater.enums.AppUpdaterError;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.javiersantos.appupdater.objects.Update;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.Arrays;
@@ -57,7 +46,6 @@ import java.util.List;
  */
 public class RoundUpdate extends BaseFragment {
 
-    PeriodicWorkRequest workRequest;
 
     Token token;
     private ProgressDialog mProgressDialog;
@@ -76,7 +64,6 @@ public class RoundUpdate extends BaseFragment {
     TextView roundNoLabel;
     Button submitButton;
 
-    CandidateDbHelper candidateDbHelper;
 
     LogDbHelper logDbHelper;
 
@@ -99,6 +86,10 @@ public class RoundUpdate extends BaseFragment {
 
     FirebaseCrashlytics crashlytics;
 
+
+   CandidatesListHelper candidatesListHelper;
+
+   ACHelper acHelper;
 
     public RoundUpdate() {
         // Required empty public constructor
@@ -135,7 +126,6 @@ public class RoundUpdate extends BaseFragment {
         mProgressDialog = new ProgressDialog(this.getContext());
         crashlytics = FirebaseCrashlytics.getInstance();
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
-        candidateDbHelper = new CandidateDbHelper(getContext());
         logDbHelper = new LogDbHelper(getContext());
         prefHelper = new PrefHelper(getActivity().getApplicationContext());
         authHelper = AuthHelper.getInstance(this.getContext());
@@ -147,16 +137,9 @@ public class RoundUpdate extends BaseFragment {
             startActivity(myIntent);
             return view;
         }
-        electionCode = prefHelper.getPasscode().getElectionCode();
-        crashlytics.setCustomKey("isInitialized Passcode:", prefHelper.getPasscode().toString());
-        if (!candidateDbHelper.isInitialized(electionCode)) {
-            getCandidates();
-        } else {
-            setUpViews();
-            autoCompleteTextViews = new AutoCompleteTextViews(acTextView, acNameTextView, roundNoTextView, pCodeTextView, pNameTextView, candidateNameTextView, candidateDbHelper);
-            setUpAutoCompleteTextViews();
-        }
         new KeyboardUtil(getActivity(),view.findViewById(R.id.main_form));
+        electionCode = prefHelper.getPasscode().getElectionCode();
+        getACList();
         return view;
     }
 
@@ -186,28 +169,28 @@ public class RoundUpdate extends BaseFragment {
     }
 
 
-    protected void setUpAutoCompleteTextViews() {
-        AutoSuggestAdapter acCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.getAllACCodes(electionCode));
+    protected void setUpAcCodeAndAcNameDropDown(){
+        AutoSuggestAdapter acCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, acHelper.getACodeList());
         acTextView.setAdapter(acCodeAdapter);
-        AutoSuggestAdapter acNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.getAllACNames(electionCode));
+        AutoSuggestAdapter acNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, acHelper.getACNameList());
         acNameTextView.setAdapter(acNameAdapter);
-        if (candidateDbHelper.isValidACName(prefHelper.getACName()) && candidateDbHelper.isValidACCode(prefHelper.getACCode())) {
-            acTextView.setText(prefHelper.getACCode());
-            acNameTextView.setText(prefHelper.getACName());
-        }
         if (acNameTextView.isFocused() && autoCompleteTextViews.isValidACNameText()) {
-            autoCompleteTextViews.setACText(candidateDbHelper.findACCodeByACName(autoCompleteTextViews.getACName()));
+            autoCompleteTextViews.setACText(acHelper.findACCodeByACName(autoCompleteTextViews.getACName()));
         } else {
-            autoCompleteTextViews.setACNameText(candidateDbHelper.findACNameByACCode(autoCompleteTextViews.getACCode()));
+            autoCompleteTextViews.setACNameText(acHelper.findACNameByACCode(autoCompleteTextViews.getACCode()));
         }
+    }
+
+
+    protected void setUpAutoCompleteTextViews() {
         if (autoCompleteTextViews.isValidACText() || autoCompleteTextViews.isValidACNameText()) {
             if ((pCodeTextView.isFocused() || pNameTextView.isFocused()) && (autoCompleteTextViews.isValidPartyName() || autoCompleteTextViews.isValidPartyCode())) {
                 if (pCodeTextView.isFocused() && autoCompleteTextViews.isValidPartyCode()) {
-                    autoCompleteTextViews.setPartyNameText(candidateDbHelper.findPartyNameByPartyCode(autoCompleteTextViews.getPartyCode()));
-                    autoCompleteTextViews.setCandidateNameText(candidateDbHelper.findCandidateNamesByPartyCodeAndACCode(autoCompleteTextViews.getPartyCode(), autoCompleteTextViews.getACCode()));
+                    autoCompleteTextViews.setPartyNameText(candidatesListHelper.findPartyNameByPartyCode(autoCompleteTextViews.getPartyCode()));
+                    autoCompleteTextViews.setCandidateNameText(candidatesListHelper.findCandidateNamesByPartyCode(autoCompleteTextViews.getPartyCode()));
                 } else {
                     if (autoCompleteTextViews.isValidCandidateName()) {
-                        List<String> partyCodes = candidateDbHelper.findPartyCodesByCandidateNameAndPartyName(autoCompleteTextViews.getPartyName(), autoCompleteTextViews.getCandidateName());
+                        List<String> partyCodes = candidatesListHelper.findPartyCodesByCandidateNameAndPartyName(autoCompleteTextViews.getPartyName(), autoCompleteTextViews.getCandidateName());
                         if (partyCodes.size() == 1) {
                             pCodeTextView.setText(partyCodes.get(0));
                         } else {
@@ -215,23 +198,23 @@ public class RoundUpdate extends BaseFragment {
                             pCodeTextView.setAdapter(partyCodeAdapter);
                         }
                     } else {
-                        List<String> pCodes = candidateDbHelper.findPartyCodeByPartyName(autoCompleteTextViews.getPartyName());
+                        List<String> pCodes = candidatesListHelper.findPartyCodeByPartyName(autoCompleteTextViews.getPartyName());
                         if (pCodes.size() == 1) {
                             pCodeTextView.setText(pCodes.get(0));
-                            String candidate = candidateDbHelper.findCandidateNamesByPartyCodeAndACCode(autoCompleteTextViews.getPartyCode(), autoCompleteTextViews.getACCode());
+                            String candidate = candidatesListHelper.findCandidateNamesByPartyCode(autoCompleteTextViews.getPartyCode());
                             candidateNameTextView.setText(candidate);
                         } else {
                             AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, pCodes);
                             pCodeTextView.setAdapter(partyCodeAdapter);
-                            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findCandidateNameByPartyNameAndACCode(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getPartyName()));
+                            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidatesListHelper.findCandidateNamesByPartyName(autoCompleteTextViews.getPartyName()));
                             candidateNameTextView.setAdapter(candidateNameAdapter);
                         }
 
                     }
                 }
             } else if (candidateNameTextView.isFocused() && autoCompleteTextViews.isValidCandidateName()) {
-                List<String> partyNames = candidateDbHelper.findPartyNamesByCandidateName(autoCompleteTextViews.getCandidateName());
-                List<String> partyCodes = candidateDbHelper.findPartyCodesByCandidateName(autoCompleteTextViews.getCandidateName());
+                List<String> partyNames = candidatesListHelper.findPartyNamesByCandidateName(autoCompleteTextViews.getCandidateName());
+                List<String> partyCodes = candidatesListHelper.findPartyCodesByCandidateName(autoCompleteTextViews.getCandidateName());
                 if (partyNames.size() == 1) {
                     pNameTextView.setText(partyNames.get(0));
                 } else {
@@ -245,11 +228,11 @@ public class RoundUpdate extends BaseFragment {
                     pCodeTextView.setAdapter(partyCodeAdapter);
                 }
             } else {
-                AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findPartyNamesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidatesListHelper.getPartyNames());
                 pNameTextView.setAdapter(partyNameAdapter);
-                AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findPartyCodesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidatesListHelper.getPartCodes());
                 pCodeTextView.setAdapter(partyCodeAdapter);
-                AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidateDbHelper.findCandidateNamesByACCode(autoCompleteTextViews.getACCode()));
+                AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, candidatesListHelper.getCandidateNames());
                 candidateNameTextView.setAdapter(candidateNameAdapter);
             }
 
@@ -298,14 +281,18 @@ public class RoundUpdate extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 acNameTextView.setText("");
-                setUpAutoCompleteTextViews();
+                setUpAcCodeAndAcNameDropDown();
+                getCandidates();
+                getLastRoundDataList();
             }
         });
         acNameTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 acTextView.setText("");
-                setUpAutoCompleteTextViews();
+                setUpAcCodeAndAcNameDropDown();
+                getCandidates();
+                getLastRoundDataList();
             }
         });
         pCodeTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -450,15 +437,24 @@ public class RoundUpdate extends BaseFragment {
     };
 
     public void getCandidates() {
+        mProgressDialog.setMessage("Getting candidate details for Assembly Constituency");
+        mProgressDialog.show();
+        NetworkRequest request = NetworkRequest.getInstance();
+        request.doGetCandidates(token, doGetCandidatesCallback, electionCode, autoCompleteTextViews.getACCode());
+    }
+
+    public void getACList() {
         mProgressDialog.setMessage("Refreshing constituency details...Please Wait...");
         mProgressDialog.show();
         NetworkRequest request = NetworkRequest.getInstance();
-        request.doGetCandidates(token, doGetCandidatesCallback);
+        request.doGetACList(token, electionCode, doGetAcList);
     }
 
     private void getLastRoundDataList() {
         NetworkRequest request = NetworkRequest.getInstance();
-        request.doGetLastRoundData(token, electionCode, doGetLastRoundData);
+        if(autoCompleteTextViews.isValidACText()) {
+            request.doGetLastRoundData(token, electionCode, autoCompleteTextViews.getACCode(), doGetLastRoundData);
+        }
     }
 
 
@@ -469,7 +465,7 @@ public class RoundUpdate extends BaseFragment {
             if (autoCompleteTextViews.isValidCandidateName() && autoCompleteTextViews.isValidACNameText() && autoCompleteTextViews.isValidPartyCode() && autoCompleteTextViews.isValidPartyName() && autoCompleteTextViews.isValidACText()) {
                 roundUpdate.setAssemblyConstitutionCode(Integer.parseInt(autoCompleteTextViews.getACCode()));
                 roundUpdate.setPartyCode(autoCompleteTextViews.getPartyCode());
-                roundUpdate.setCandidateCode(candidateDbHelper.findCandidateCodeByACCodeAndCandidateName(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getCandidateName()));
+                roundUpdate.setCandidateCode(candidatesListHelper.findCandidateCodeByCandidateName(autoCompleteTextViews.getCandidateName()));
                 roundUpdate.setElectionCode(electionCode);
                 roundUpdate.setRound(autoCompleteTextViews.getRoundNo());
             } else {
@@ -498,18 +494,12 @@ public class RoundUpdate extends BaseFragment {
 
 
         @Override
-        public void onResponse(int responseCode, @NonNull Candidate[] response) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    candidateDbHelper.addCandidate(electionCode, response);
-                    setUpViews();
-                    autoCompleteTextViews = new AutoCompleteTextViews(acTextView, acNameTextView, roundNoTextView, pCodeTextView, pNameTextView, candidateNameTextView, candidateDbHelper);
-                    setUpAutoCompleteTextViews();
-                    makeToast("Success!!");
-                    mProgressDialog.dismiss();
-                }
-            });
+        public void onResponse(int responseCode, @NonNull Candidate[] candidates) {
+            log("info","onResponse: "+Arrays.toString(candidates));
+            mProgressDialog.dismiss();
+            candidatesListHelper = new CandidatesListHelper(candidates);
+            autoCompleteTextViews = new AutoCompleteTextViews(acTextView, acNameTextView, roundNoTextView, pCodeTextView, pNameTextView, candidateNameTextView, candidatesListHelper, acHelper);
+            setUpAutoCompleteTextViews();
         }
 
         @Override
@@ -523,7 +513,7 @@ public class RoundUpdate extends BaseFragment {
             }else if(responseCode == Constants.INTERNET_UNAVAILABLE){
                 makeToast(error);
             } else {
-                makeToast("Not able to fetch latest election data..");
+                makeToast("Not able to fetch candidates..");
             }
         }
 
@@ -562,7 +552,7 @@ public class RoundUpdate extends BaseFragment {
                 if(response != null && !response.isBlank()) {
                     makeToast(response);
                 }else{
-                    makeToast("Api returned empty response");
+                    makeToast("Something went wrong");
                 }
             }
 
@@ -622,6 +612,46 @@ public class RoundUpdate extends BaseFragment {
         @Override
         public Class<LastRoundData[]> type() {
             return LastRoundData[].class;
+        }
+
+    };
+
+    private NetworkRequest.Callback<AssemblyConstituency[]> doGetAcList = new NetworkRequest.Callback<AssemblyConstituency[]>() {
+
+
+        @Override
+        public void onResponse(int responseCode, @NonNull AssemblyConstituency[] assemblyConstituencies) {
+            mProgressDialog.dismiss();
+            if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
+                makeToast("Session expired!!! Login Again..");
+                authHelper.clear();
+                openLoginActivity();
+            }
+            log("info", "onResponse: " + Arrays.toString(assemblyConstituencies));
+            RoundUpdate.this.acHelper = new ACHelper(assemblyConstituencies);
+            setUpViews();
+            autoCompleteTextViews = new AutoCompleteTextViews(acTextView, acNameTextView, roundNoTextView, pCodeTextView, pNameTextView, candidateNameTextView, candidatesListHelper, acHelper);
+            setUpAcCodeAndAcNameDropDown();
+        }
+
+        @Override
+        public void onError(int responseCode, String error) {
+            mProgressDialog.dismiss();
+            if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
+                makeToast("Session expired!!! Login Again..");
+                // clear saved token
+                authHelper.clear();
+                openLoginActivity();
+            } else if(responseCode == Constants.INTERNET_UNAVAILABLE){
+                makeToast(error);
+            }else {
+                makeToast("Unable to fetch last round information..");
+            }
+        }
+
+        @Override
+        public Class<AssemblyConstituency[]> type() {
+            return AssemblyConstituency[].class;
         }
 
     };
