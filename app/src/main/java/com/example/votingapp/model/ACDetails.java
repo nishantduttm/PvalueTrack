@@ -1,39 +1,19 @@
 package com.example.votingapp.model;
 
-
-import com.example.votingapp.ApiLib.NetworkRequest;
 import com.google.gson.annotations.SerializedName;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class Candidate implements NetworkRequest.ApiResponse {
+public class ACDetails {
     @SerializedName("pcode")
     String partyCode;
     @SerializedName("pname")
     String partyName;
+    @SerializedName("candicode")
+    String candidateCode;
     @SerializedName("candiname")
     String candidateName;
-    @SerializedName("candicode")
-    int candidateCode;
 
-
-    public Candidate() {
+    public ACDetails() {
     }
-
-
-    public String getCandidateName() {
-        return candidateName;
-    }
-
-    public void setCandidateName(String candidateName) {
-        this.candidateName = candidateName;
-    }
-
-
 
     public String getPartyCode() {
         return partyCode;
@@ -51,28 +31,29 @@ public class Candidate implements NetworkRequest.ApiResponse {
         this.partyName = partyName;
     }
 
-    public int getCandidateCode() {
+    public String getCandidateCode() {
         return candidateCode;
     }
 
-    public void setCandidateCode(int candidateCode) {
+    public void setCandidateCode(String candidateCode) {
         this.candidateCode = candidateCode;
     }
 
+    public String getCandidateName() {
+        return candidateName;
+    }
 
-
-    @Override
-    public String toString() {
-        return "Candidate{" +
-                "partyCode='" + partyCode + '\'' +
-                ", partyName='" + partyName + '\'' +
-                ", candidateName='" + candidateName + '\'' +
-                ", candidateCode=" + candidateCode +
-                '}';
+    public void setCandidateName(String candidateName) {
+        this.candidateName = candidateName;
     }
 
     @Override
-    public String string() {
-        return this.toString();
+    public String toString() {
+        return "ACDetails{" +
+                "partyCode='" + partyCode + '\'' +
+                ", partyName='" + partyName + '\'' +
+                ", candidateCode='" + candidateCode + '\'' +
+                ", candidateName='" + candidateName + '\'' +
+                '}';
     }
 }

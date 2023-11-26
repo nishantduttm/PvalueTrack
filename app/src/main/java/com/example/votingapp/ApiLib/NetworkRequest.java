@@ -71,7 +71,7 @@ public class NetworkRequest {
 
     public void cancelOngoingRequests(){
         for(Call call : onGoingCalls){
-            if(!call.isCanceled()) {
+            if(call != null && !call.isCanceled()) {
                 call.cancel();
             }
         }
@@ -114,19 +114,32 @@ public class NetworkRequest {
     }
 
 
-    public void doGetCandidates(Token token, Callback callback) {
+    public void doGetCandidates(Token token, Callback callback, String electionCode, String acCode) {
         setCallback(callback);
-        String getCandidatesUrl = BASE_URL + "getCandidates";
-        doGetRequestWithToken(getCandidatesUrl, new HashMap<>(), token.getIdToken(), callback);
+        String getCandidatesUrl = BASE_URL + "getACDetails";
+        Map<String, String> params = new HashMap<>();
+        params.put("ecode", electionCode);
+        params.put("ac_code", acCode);
+        doGetRequestWithToken(getCandidatesUrl, params, token.getIdToken(), callback);
     }
 
-    public void doGetLastRoundData(Token token, String electionCode, Callback callback) {
+    public void doGetLastRoundData(Token token, String electionCode, String acCode,  Callback callback) {
         setCallback(callback);
         String getCandidatesUrl = BASE_URL + "lastrounddata";
         Map<String, String> params = new HashMap<>();
         params.put("ecode", electionCode);
+        params.put("ac_code", acCode);
         doGetRequestWithToken(getCandidatesUrl, params, token.getIdToken(), callback);
     }
+
+    public void doGetACList(Token token, String electionCode, Callback callback) {
+        setCallback(callback);
+        String getCandidatesUrl = BASE_URL + "getAllACDeatails";
+        Map<String, String> params = new HashMap<>();
+        params.put("ecode", electionCode);
+        doGetRequestWithToken(getCandidatesUrl, params, token.getIdToken(), callback);
+    }
+
 
     public void doGetPasscodes(Token token, Callback callback) {
         setCallback(callback);

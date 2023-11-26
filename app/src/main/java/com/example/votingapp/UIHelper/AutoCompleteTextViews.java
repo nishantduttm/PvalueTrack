@@ -4,7 +4,8 @@ import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-import com.example.votingapp.db.CandidateDbHelper;
+import com.example.votingapp.utils.ACHelper;
+import com.example.votingapp.utils.CandidatesListHelper;
 
 public class AutoCompleteTextViews {
     AutoCompleteTextView acTextView;
@@ -14,17 +15,20 @@ public class AutoCompleteTextViews {
     AutoCompleteTextView pNameTextView;
     AutoCompleteTextView candidateNameTextView;
 
-    public AutoCompleteTextViews(AutoCompleteTextView acTextView, AutoCompleteTextView acNameTextView, EditText roundNoTextView, AutoCompleteTextView pCodeTextView, AutoCompleteTextView pNameTextView, AutoCompleteTextView candidateNameTextView, CandidateDbHelper candidateHelper) {
+    public AutoCompleteTextViews(AutoCompleteTextView acTextView, AutoCompleteTextView acNameTextView, EditText roundNoTextView, AutoCompleteTextView pCodeTextView, AutoCompleteTextView pNameTextView, AutoCompleteTextView candidateNameTextView, CandidatesListHelper candidateHelper, ACHelper acHelper) {
         this.acTextView = acTextView;
         this.acNameTextView = acNameTextView;
         this.roundNoTextView = roundNoTextView;
         this.pCodeTextView = pCodeTextView;
         this.pNameTextView = pNameTextView;
         this.candidateNameTextView = candidateNameTextView;
-        this.candidateDbHelper = candidateHelper;
+        this.candidatesListHelper = candidateHelper;
+        this.acHelper = acHelper;
     }
 
-    CandidateDbHelper candidateDbHelper;
+    CandidatesListHelper candidatesListHelper;
+
+    ACHelper acHelper;
 
 
     public String getACCode() {
@@ -57,33 +61,44 @@ public class AutoCompleteTextViews {
 
     public boolean isValidCandidateName() {
         String candidateName = getCandidateName();
-        return candidateDbHelper.isValidCandidateName(candidateName);
+        if(candidatesListHelper == null){
+            return false;
+        }
+        return candidatesListHelper.isValidCandidateName(candidateName);
     }
 
     public boolean isValidPartyName() {
         String partyName = getPartyName();
-        return candidateDbHelper.isValidPartyName(partyName);
+        if(candidatesListHelper == null){
+            return false;
+        }
+        return candidatesListHelper.isValidPartyName(partyName);
     }
 
     public boolean isValidPartyCode() {
         String partyCode = getPartyCode();
-        return candidateDbHelper.isValidPartyCode(partyCode);
+        if(candidatesListHelper == null){
+            return false;
+        }
+        return candidatesListHelper.isValidPartyCode(partyCode);
     }
 
     public boolean isValidACText() {
         String acCode = getACCode();
         Log.d("info", "isValidACText: " + acCode);
-        if (candidateDbHelper.isValidACCode(acCode)) {
-            return true;
-        } else {
+        if(acHelper == null){
             return false;
         }
+        return acHelper.isValidACCode(acCode);
     }
 
 
     public boolean isValidACNameText() {
         String acName = getACName();
-        return candidateDbHelper.isValidACName(acName);
+        if(acHelper == null){
+            return false;
+        }
+        return acHelper.isValidACName(acName);
     }
 
     public void setACText(String acCode){
