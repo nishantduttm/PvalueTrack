@@ -297,9 +297,9 @@ public class PasscodeFragment extends BaseFragment {
                         if (isAdded()) {
                             Intent myIntent = new Intent(mainScreenActivity, MainScreen.class);
                             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(myIntent);
                             dismissDialog();
                             clearPasscode();
-                            startActivity(myIntent);
                             mainScreenActivity.finish();
                         }
                     }
