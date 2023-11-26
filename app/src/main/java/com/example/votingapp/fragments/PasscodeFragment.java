@@ -287,8 +287,6 @@ public class PasscodeFragment extends BaseFragment {
 
         @Override
         public void onResponse(int responseCode, @NonNull Passcode[] passcodes) {
-            dismissDialog();
-            clearPasscode();
             if (responseCode == Constants.SUCCESS_RESPONSE_CODE) {
                 boolean isValidPasscode = false;
                 for (Passcode passcode : passcodes) {
@@ -299,7 +297,10 @@ public class PasscodeFragment extends BaseFragment {
                         if (isAdded()) {
                             Intent myIntent = new Intent(mainScreenActivity, MainScreen.class);
                             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            dismissDialog();
+                            clearPasscode();
                             startActivity(myIntent);
+                            mainScreenActivity.finish();
                         }
                     }
                 }
