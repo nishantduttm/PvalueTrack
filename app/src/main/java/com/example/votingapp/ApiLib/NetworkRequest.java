@@ -19,15 +19,13 @@ import com.example.votingapp.model.RoundUpdateBody;
 import com.example.votingapp.model.Token;
 import com.example.votingapp.model.User;
 import com.example.votingapp.model.UserSignUp;
-import com.example.votingapp.utils.AuthHelper;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import cz.msebera.android.httpclient.client.methods.RequestBuilder;
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -61,7 +58,8 @@ public class NetworkRequest {
 
 
     private NetworkRequest() {
-        mClient = new OkHttpClient.Builder()  .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
+        mClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
                 .readTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
                 .writeTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
@@ -280,6 +278,7 @@ public class NetworkRequest {
                         @Override
                         public void run() {
                             log("info", e.toString());
+                            callback.onError(Constants.INTERNET_UNAVAILABLE, "Something went wrong.");
                         }
                     });
                 }
@@ -303,7 +302,7 @@ public class NetworkRequest {
                                 }
                             }
                         });
-                    } catch (final UnknownHostException ioe) {
+                    } catch (final UnknownHostException | SocketTimeoutException e) {
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
