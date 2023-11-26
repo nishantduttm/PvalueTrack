@@ -85,14 +85,9 @@ public class BaseFragment extends Fragment {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                        Log.d("Latest Version", update.getLatestVersion());
-                        Log.d("Latest Version Code", update.getLatestVersionCode().toString());
-                        Log.d("Release notes", update.getReleaseNotes());
-                        Log.d("URL", update.getUrlToDownload().toString());
-                        Log.d("Is update available?", Boolean.toString(isUpdateAvailable));
                         if(isUpdateAvailable){
                             new AlertDialog.Builder(BaseFragment.this.getActivity())
-                                    .setTitle("Update Available")
+                                    .setTitle("Update Available "+update.getLatestVersionCode().toString())
                                     .setMessage("Do you want update app?")
                                     .setIcon(R.drawable.icon)
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

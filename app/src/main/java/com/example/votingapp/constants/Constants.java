@@ -9,7 +9,7 @@ public class Constants {
 
     public static final int SUCCESS_RESPONSE_CODE = 200;
 
-    public static final int CONNECTION_TIME_OUT = 20;
+    public static final int CONNECTION_TIME_OUT = 10;
 
     public static final String ELECTION_CODE = "electionCode";
 
