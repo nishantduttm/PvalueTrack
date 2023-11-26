@@ -646,6 +646,7 @@ public class RoundUpdate extends BaseFragment {
             }else {
                 makeToast("Unable to fetch AC Details ");
             }
+            setUpViews();
         }
 
         @Override
