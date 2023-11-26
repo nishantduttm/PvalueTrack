@@ -108,9 +108,9 @@ public class CandidatesListHelper {
         return new ArrayList<>(partyNames);
     }
 
-    public int findCandidateCodeByCandidateName(String candidateName){
+    public int findCandidateCodeByCandidateNameAndPartyCode(String candidateName, String partyCode){
         for(Candidate candidate : candidateList){
-            if(candidate.getCandidateName().equals(candidateName)) {
+            if(candidate.getCandidateName().equals(candidateName) && candidate.getPartyCode().equals(partyCode)) {
                 return candidate.getCandidateCode();
             }
         }
