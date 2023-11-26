@@ -639,13 +639,12 @@ public class RoundUpdate extends BaseFragment {
             mProgressDialog.dismiss();
             if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
                 makeToast("Session expired!!! Login Again..");
-                // clear saved token
                 authHelper.clear();
                 openLoginActivity();
             } else if(responseCode == Constants.INTERNET_UNAVAILABLE){
                 makeToast(error);
             }else {
-                makeToast("Unable to fetch last round information..");
+                makeToast("Unable to fetch AC Details ");
             }
         }
 
