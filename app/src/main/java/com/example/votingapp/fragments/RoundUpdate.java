@@ -26,6 +26,7 @@ import com.example.votingapp.model.AssemblyConstituency;
 import com.example.votingapp.model.Candidate;
 import com.example.votingapp.model.LastRoundData;
 import com.example.votingapp.model.LogEntry;
+import com.example.votingapp.model.Passcode;
 import com.example.votingapp.model.RoundUpdateBody;
 import com.example.votingapp.model.Token;
 import com.example.votingapp.screens.LoginSignupScreen;
@@ -126,21 +127,21 @@ public class RoundUpdate extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_round_update, container, false);
         mProgressDialog = new ProgressDialog(this.getContext());
-        crashlytics = FirebaseCrashlytics.getInstance();
-        token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
-        logDbHelper = new LogDbHelper(getContext());
         prefHelper = new PrefHelper(getActivity().getApplicationContext());
-        authHelper = AuthHelper.getInstance(this.getContext());
-        if(prefHelper.getPasscode().getPasscode() == null){
+        Passcode passcode =  prefHelper.getPasscode();
+        crashlytics = FirebaseCrashlytics.getInstance();
+        token = new Token(AuthHelper.getInstance(RoundUpdate.this.getContext()).getIdToken());
+        logDbHelper = new LogDbHelper(getContext());
+        authHelper = AuthHelper.getInstance(RoundUpdate.this.getContext());
+        if(passcode.getElectionCode() == null){
             log("info", "Starting passcode fragment as passcode is null");
             Intent myIntent = new Intent(getActivity(), LoginSignupScreen.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             getActivity().finish();
             startActivity(myIntent);
-            return view;
         }
         new KeyboardUtil(getActivity(),view.findViewById(R.id.main_form));
-        electionCode = prefHelper.getPasscode().getElectionCode();
+        electionCode = passcode.getElectionCode();
         getACList();
         return view;
     }
@@ -187,6 +188,12 @@ public class RoundUpdate extends BaseFragment {
     protected void setUpAutoCompleteTextViews() {
         Trace trace = FirebasePerformance.startTrace("SetupAutoCompleteViews");
         if(candidatesListHelper == null){
+            AutoSuggestAdapter partyNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
+            pNameTextView.setAdapter(partyNameAdapter);
+            AutoSuggestAdapter partyCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
+            pCodeTextView.setAdapter(partyCodeAdapter);
+            AutoSuggestAdapter candidateNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, Arrays.asList("No Result"));
+            candidateNameTextView.setAdapter(candidateNameAdapter);
             return;
         }
         if (autoCompleteTextViews.isValidACText() || autoCompleteTextViews.isValidACNameText()) {
@@ -289,6 +296,7 @@ public class RoundUpdate extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 acNameTextView.setText("");
                 setUpAcCodeAndAcNameDropDown();
+
                 getCandidates();
                 getLastRoundDataList();
             }
@@ -444,6 +452,7 @@ public class RoundUpdate extends BaseFragment {
     };
 
     public void getCandidates() {
+        candidatesListHelper = null;
         mProgressDialog.setMessage("Getting candidate details for Assembly Constituency");
         mProgressDialog.show();
         NetworkRequest request = NetworkRequest.getInstance();
@@ -472,7 +481,7 @@ public class RoundUpdate extends BaseFragment {
             if (autoCompleteTextViews.isValidCandidateName() && autoCompleteTextViews.isValidACNameText() && autoCompleteTextViews.isValidPartyCode() && autoCompleteTextViews.isValidPartyName() && autoCompleteTextViews.isValidACText()) {
                 roundUpdate.setAssemblyConstitutionCode(Integer.parseInt(autoCompleteTextViews.getACCode()));
                 roundUpdate.setPartyCode(autoCompleteTextViews.getPartyCode());
-                roundUpdate.setCandidateCode(candidatesListHelper.findCandidateCodeByCandidateName(autoCompleteTextViews.getCandidateName()));
+                roundUpdate.setCandidateCode(candidatesListHelper.findCandidateCodeByCandidateNameAndPartyCode(autoCompleteTextViews.getCandidateName(),autoCompleteTextViews.getPartyCode()));
                 roundUpdate.setElectionCode(electionCode);
                 roundUpdate.setRound(autoCompleteTextViews.getRoundNo());
             } else {

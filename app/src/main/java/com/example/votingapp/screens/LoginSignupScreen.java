@@ -89,10 +89,15 @@ public class LoginSignupScreen extends AppCompatActivity {
     }
 
     public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.loginSignUpContainer, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.loginSignUpContainer, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }).start();
     }
 
 

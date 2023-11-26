@@ -99,6 +99,12 @@ public class MainScreen extends AppCompatActivity {
         roundUpdateFragment = com.example.votingapp.fragments.RoundUpdate.newInstance(electionCode, "");
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(onItemSelectedListener);
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         if(!AuthHelper.getInstance(this).isLoggedIn()){
             redirectToSignInScreen();
         }else{
@@ -106,12 +112,16 @@ public class MainScreen extends AppCompatActivity {
         }
     }
 
-
     public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        }).start();
     }
 
 
