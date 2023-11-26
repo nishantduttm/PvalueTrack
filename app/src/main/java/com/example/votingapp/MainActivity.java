@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
                 .build());
         setContentView(R.layout.activity_main);
         Intent intent = new Intent(MainActivity.this, LoginSignupScreen.class);
-        MainActivity.this.finish();
         startActivity(intent);
     }
 }

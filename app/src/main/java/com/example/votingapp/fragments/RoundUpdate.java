@@ -127,6 +127,8 @@ public class RoundUpdate extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view = inflater.inflate(R.layout.fragment_round_update, container, false);
         mProgressDialog = new ProgressDialog(this.getContext());
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         prefHelper = new PrefHelper(getActivity().getApplicationContext());
         Passcode passcode =  prefHelper.getPasscode();
         crashlytics = FirebaseCrashlytics.getInstance();
@@ -173,6 +175,10 @@ public class RoundUpdate extends BaseFragment {
 
 
     protected void setUpAcCodeAndAcNameDropDown(){
+        if(acHelper.getACodeList().isEmpty()){
+            getACList();
+            return;
+        }
         AutoSuggestAdapter acCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, acHelper.getACodeList());
         acTextView.setAdapter(acCodeAdapter);
         AutoSuggestAdapter acNameAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, acHelper.getACNameList());
