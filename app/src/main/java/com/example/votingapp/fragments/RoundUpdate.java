@@ -35,6 +35,8 @@ import com.example.votingapp.utils.CandidatesListHelper;
 import com.example.votingapp.utils.KeyboardUtil;
 import com.example.votingapp.utils.PrefHelper;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.util.Arrays;
 import java.util.List;
@@ -183,6 +185,10 @@ public class RoundUpdate extends BaseFragment {
 
 
     protected void setUpAutoCompleteTextViews() {
+        Trace trace = FirebasePerformance.startTrace("SetupAutoCompleteViews");
+        if(candidatesListHelper == null){
+            return;
+        }
         if (autoCompleteTextViews.isValidACText() || autoCompleteTextViews.isValidACNameText()) {
             if ((pCodeTextView.isFocused() || pNameTextView.isFocused()) && (autoCompleteTextViews.isValidPartyName() || autoCompleteTextViews.isValidPartyCode())) {
                 if (pCodeTextView.isFocused() && autoCompleteTextViews.isValidPartyCode()) {
@@ -247,6 +253,7 @@ public class RoundUpdate extends BaseFragment {
         if (electionCode != null && autoCompleteTextViews.isValidACText()) {
             getLastRoundDataList();
         }
+        trace.stop();
     }
 
 
