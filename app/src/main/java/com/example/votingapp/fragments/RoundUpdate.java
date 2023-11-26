@@ -139,8 +139,8 @@ public class RoundUpdate extends BaseFragment {
             log("info", "Starting passcode fragment as passcode is null");
             Intent myIntent = new Intent(getActivity(), LoginSignupScreen.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            getActivity().finish();
             startActivity(myIntent);
+            getActivity().finish();
         }
         new KeyboardUtil(getActivity(),view.findViewById(R.id.main_form));
         electionCode = passcode.getElectionCode();
@@ -176,7 +176,7 @@ public class RoundUpdate extends BaseFragment {
 
     protected void setUpAcCodeAndAcNameDropDown(){
         if(acHelper.getACodeList().isEmpty()){
-            getACList();
+            makeToast("Unable to get assembly constituency details");
             return;
         }
         AutoSuggestAdapter acCodeAdapter = new AutoSuggestAdapter(this.activity, R.layout.list_item_1, acHelper.getACodeList());

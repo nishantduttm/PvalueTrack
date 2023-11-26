@@ -117,8 +117,8 @@ public class BaseFragment extends Fragment {
         AuthHelper.getInstance(currentActivity).clear();
         Intent myIntent = new Intent(currentActivity, LoginSignupScreen.class);
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        currentActivity.finish();
         startActivity(myIntent);
+        currentActivity.finish();
     }
 
     public static void log(String tag, String message){
