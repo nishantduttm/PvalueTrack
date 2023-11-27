@@ -1,6 +1,6 @@
 {
-  "latestVersion": "1.2.24",
-  "latestVersionCode": 28,
+  "latestVersion": "1.2.25",
+  "latestVersionCode": 29,
   "url": "https://github.com/nishantduttm/PvalueTrack/releases/download/1.0.0.0/PvalueTrack.apk",
   "releaseNotes": [
     "- Added crash analytics support",

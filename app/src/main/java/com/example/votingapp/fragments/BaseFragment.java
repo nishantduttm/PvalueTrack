@@ -2,6 +2,7 @@ package com.example.votingapp.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class BaseFragment extends Fragment {
 
+    Activity activity;
     Toast toast;
     void openFragment(Fragment fragment){
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -53,6 +55,12 @@ public class BaseFragment extends Fragment {
             toast = Toast.makeText(this.getContext(), message, Toast.LENGTH_SHORT);
             toast.show();
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        this.activity = getActivity();
     }
 
     @Override
@@ -108,7 +116,10 @@ public class BaseFragment extends Fragment {
     }
 
     void openLoginActivity(){
-        Activity currentActivity = getActivity();
+        if(activity == null){
+            return;
+        }
+        Activity currentActivity = activity;
         AuthHelper.getInstance(currentActivity).clear();
         Intent myIntent = new Intent(currentActivity, LoginSignupScreen.class);
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
