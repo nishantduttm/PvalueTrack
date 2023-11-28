@@ -95,8 +95,8 @@ public class BaseFragment extends Fragment {
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
                         if(isUpdateAvailable){
                             new AlertDialog.Builder(BaseFragment.this.activity)
-                                    .setTitle("Update Available "+update.getLatestVersionCode().toString())
-                                    .setMessage("Do you want update app?")
+                                    .setTitle("Update Available ")
+                                    .setMessage(String.format("Do you want update app to %s? \n \n Update includes:\n \n %s \n ", update.getLatestVersion(), update.getReleaseNotes()))
                                     .setIcon(R.drawable.icon)
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
