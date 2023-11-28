@@ -84,7 +84,7 @@ public class BaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =  super.onCreateView(inflater, container, savedInstanceState);
-        if(!AuthHelper.getInstance(this.getContext()).isLoggedIn()){
+        if(!AuthHelper.getInstance(this.activity).isLoggedIn()){
             openLoginActivity();
         }
         new AppUpdaterUtils(getActivity())
@@ -94,7 +94,7 @@ public class BaseFragment extends Fragment {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
                         if(isUpdateAvailable){
-                            new AlertDialog.Builder(BaseFragment.this.getActivity())
+                            new AlertDialog.Builder(BaseFragment.this.activity)
                                     .setTitle("Update Available "+update.getLatestVersionCode().toString())
                                     .setMessage("Do you want update app?")
                                     .setIcon(R.drawable.icon)
@@ -116,7 +116,7 @@ public class BaseFragment extends Fragment {
     }
 
     void openLoginActivity(){
-        if(activity == null){
+        if(activity == null || isDetached()){
             return;
         }
         Activity currentActivity = activity;

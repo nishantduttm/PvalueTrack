@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
@@ -77,7 +78,7 @@ public class PasscodeFragment extends BaseFragment {
 
     Token token ;
 
-    Activity mainScreenActivity;
+    FragmentActivity mainScreenActivity;
 
     AuthHelper authHelper;
 
@@ -240,7 +241,7 @@ public class PasscodeFragment extends BaseFragment {
     }
 
     void openFragment(Fragment fragment){
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mainScreenActivity.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.loginSignUpContainer, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
