@@ -116,7 +116,7 @@ public class BaseFragment extends Fragment {
     }
 
     void openLoginActivity(){
-        if(activity == null || isDetached()){
+        if(activity == null ||  !isAdded()){
             return;
         }
         Activity currentActivity = activity;

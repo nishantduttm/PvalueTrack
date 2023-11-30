@@ -499,12 +499,17 @@ public class RoundUpdate extends BaseFragment {
     }
 
     private void postRoundUpdate() {
+        if(getRoundNo() >= 99){
+            roundNoTextView.setError("Round no is already 99");
+            return;
+        }
         if (autoCompleteTextViews.getRoundNo() <= getRoundNo()) {
             roundNoTextView.setError("Round no must be greater than " + getRoundNo());
             return;
         }
         mProgressDialog.setMessage("Updating Round...Please Wait...");
-        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
         NetworkRequest request = NetworkRequest.getInstance();
         request.doUpdateRound(token, prepareUpdate(), dpPostRoundUpdate);
@@ -552,29 +557,33 @@ public class RoundUpdate extends BaseFragment {
         public void onResponse(int responseCode, @NonNull String response) {
             mProgressDialog.dismiss();
             log("info", "onResponse Round Update: " + response.toString());
-            if (responseCode == Constants.SUCCESS_RESPONSE_CODE) {
-                prefHelper.saveACDetails(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getACName());
-                logDbHelper.saveLog(new LogEntry(
-                        autoCompleteTextViews.getACCode(),
-                        autoCompleteTextViews.getACName(),
-                        autoCompleteTextViews.getPartyName(),
-                        autoCompleteTextViews.getPartyCode(),
-                        autoCompleteTextViews.getCandidateName(),
-                        autoCompleteTextViews.getRoundNo(),
-                        prefHelper.getUserName(),
-                        electionCode));
-                clearTextViews();
-                makeToast(response);
-            } else if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
-                makeToast("Session expired!!! Login Again..");
-                authHelper.clear();
-                openLoginActivity();
-            }else{
-                if(response != null && !response.isBlank()) {
+            try {
+                if (responseCode == Constants.SUCCESS_RESPONSE_CODE) {
+                    prefHelper.saveACDetails(autoCompleteTextViews.getACCode(), autoCompleteTextViews.getACName());
+                    logDbHelper.saveLog(new LogEntry(
+                            autoCompleteTextViews.getACCode(),
+                            autoCompleteTextViews.getACName(),
+                            autoCompleteTextViews.getPartyName(),
+                            autoCompleteTextViews.getPartyCode(),
+                            autoCompleteTextViews.getCandidateName(),
+                            autoCompleteTextViews.getRoundNo(),
+                            prefHelper.getUserName(),
+                            electionCode));
+                    clearTextViews();
                     makeToast(response);
-                }else{
-                    makeToast("Something went wrong");
+                } else if (responseCode == Constants.UNAUTHORIZED_RESPONSE_CODE) {
+                    makeToast("Session expired!!! Login Again..");
+                    authHelper.clear();
+                    openLoginActivity();
+                } else {
+                    if (response != null && !response.isBlank()) {
+                        makeToast(response);
+                    } else {
+                        makeToast("Something went wrong");
+                    }
                 }
+            }catch (Exception  e){
+                log("info", "Exception occurred" + e);
             }
 
         }
