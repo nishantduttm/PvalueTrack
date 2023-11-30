@@ -241,6 +241,9 @@ public class PasscodeFragment extends BaseFragment {
     }
 
     void openFragment(Fragment fragment){
+        if(mainScreenActivity == null || !isAdded()){
+            return;
+        }
         FragmentTransaction transaction = mainScreenActivity.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.loginSignUpContainer, fragment);
         transaction.addToBackStack(null);
@@ -277,6 +280,9 @@ public class PasscodeFragment extends BaseFragment {
     }
 
     private void clearPasscode(){
+        if(passcodeEditTexts == null){
+            return;
+        }
         for(EditText editText : passcodeEditTexts){
             editText.setText("");
         }

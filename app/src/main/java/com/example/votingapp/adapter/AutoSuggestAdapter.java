@@ -1,5 +1,7 @@
 package com.example.votingapp.adapter;
 
+import static com.example.votingapp.fragments.BaseFragment.log;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,16 +83,18 @@ public class AutoSuggestAdapter extends ArrayAdapter
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results)
         {
-            List<String> filterList = (ArrayList) results.values;
-            if (results != null && results.count > 0)
-            {
-                filterList = new ArrayList<>(filterList);
-                clear();
-                for (String item : filterList)
-                {
-                    add(item);
-                    notifyDataSetChanged();
+            try {
+                List<String> filterList = (ArrayList) results.values;
+                if (results != null && results.count > 0) {
+                    filterList = new ArrayList<>(filterList);
+                    clear();
+                    for (String item : filterList) {
+                        add(item);
+                        notifyDataSetChanged();
+                    }
                 }
+            }catch (UnsupportedOperationException  e){
+                log("info","publishResults: caught unsupported operation exception");
             }
         }
     };
