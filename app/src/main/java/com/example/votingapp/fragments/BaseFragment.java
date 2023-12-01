@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.votingapp.R;
@@ -32,13 +33,17 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class BaseFragment extends Fragment {
 
-    Activity activity;
+    FragmentActivity activity;
     Toast toast;
     void openFragment(Fragment fragment){
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.loginSignUpContainer, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        try {
+            FragmentTransaction transaction = this.activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.loginSignUpContainer, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }catch (Exception e){
+            log("info", "openFragment: Exception Occured");
+        }
     }
     void openFragmentInMainScreen(Fragment fragment){
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -93,17 +98,22 @@ public class BaseFragment extends Fragment {
                 .withListener(new AppUpdaterUtils.UpdateListener() {
                     @Override
                     public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                        if(isUpdateAvailable){
-                            new AlertDialog.Builder(BaseFragment.this.activity)
-                                    .setTitle("Update Available ")
-                                    .setMessage(String.format("Do you want update app to %s? \n \n Update includes:\n \n %s \n ", update.getLatestVersion(), update.getReleaseNotes()))
-                                    .setIcon(R.drawable.icon)
-                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(update.getUrlToDownload().toString()));
-                                            startActivity(browserIntent);
-                                        }})
-                                    .setNegativeButton("No", null).show();
+                        if(isUpdateAvailable && isAdded()){
+                            try {
+                                new AlertDialog.Builder(BaseFragment.this.activity)
+                                        .setTitle("Update Available ")
+                                        .setMessage(String.format("Do you want update app to %s? \n \n Update includes:\n \n %s \n ", update.getLatestVersion(), update.getReleaseNotes()))
+                                        .setIcon(R.drawable.icon)
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(update.getUrlToDownload().toString()));
+                                                startActivity(browserIntent);
+                                            }
+                                        })
+                                        .setNegativeButton("No", null).show();
+                            }catch(Exception e){
+                                log("info", "onSuccess: Exception occurred");
+                            }
                         }
                     }
 

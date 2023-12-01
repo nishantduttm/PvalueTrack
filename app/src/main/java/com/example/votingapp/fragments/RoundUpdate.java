@@ -499,6 +499,9 @@ public class RoundUpdate extends BaseFragment {
     }
 
     private void postRoundUpdate() {
+        if(autoCompleteTextViews == null){
+            return;
+        }
         if(getRoundNo() >= 99){
             roundNoTextView.setError("Round no is already 99");
             return;

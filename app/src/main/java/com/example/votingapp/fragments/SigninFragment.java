@@ -95,6 +95,8 @@ public class SigninFragment extends BaseFragment {
         View v =   inflater.inflate(R.layout.fragment_signin, container, false);
         // Inflate the layout for this fragment
         mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
 
         prefHelper = new PrefHelper(getActivity().getApplicationContext());
 

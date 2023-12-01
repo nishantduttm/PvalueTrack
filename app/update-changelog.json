@@ -1,9 +1,8 @@
 {
-  "latestVersion": "1.2.28",
-  "latestVersionCode": 32,
+  "latestVersion": "1.2.29",
+  "latestVersionCode": 33,
   "url": "https://github.com/nishantduttm/PvalueTrack/releases/download/1.0.0.0/PvalueTrack.apk",
   "releaseNotes": [
-    "- Crash Fixes",
-    "- Change error message when round no is 99"
+    "- Crash Fixes"
   ]
 }
