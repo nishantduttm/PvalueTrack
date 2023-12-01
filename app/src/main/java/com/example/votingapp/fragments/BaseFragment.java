@@ -140,8 +140,7 @@ public class BaseFragment extends Fragment {
     public static void log(String tag, String message){
         Log.d(tag, message);
         FirebaseCrashlytics firebaseCrashlytics  = FirebaseCrashlytics.getInstance();
-        String[] messageparts = message.split(" ", 2);
-        firebaseCrashlytics.setCustomKey(messageparts[0], messageparts[1]);
+        firebaseCrashlytics.getInstance().log(message);
     }
 
 }
