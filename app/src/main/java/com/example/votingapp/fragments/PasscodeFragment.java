@@ -226,6 +226,8 @@ public class PasscodeFragment extends BaseFragment {
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
         Passcode savedPasscode = new PrefHelper(getActivity().getApplicationContext()).getPasscode();
         mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
         prefHelper = new PrefHelper(getActivity().getApplicationContext());
         authHelper = AuthHelper.getInstance(this.getContext());
         if(!isNewPasscodeRequired && savedPasscode.getPasscode() != null){

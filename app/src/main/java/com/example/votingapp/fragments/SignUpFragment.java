@@ -106,6 +106,8 @@ public class SignUpFragment extends BaseFragment {
         passwordEditText = v.findViewById(R.id.passwordEditText);
         submitButton = v.findViewById(R.id.signupButton);
         progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         token = new Token(AuthHelper.getInstance(this.getContext()).getIdToken());
         submitButton.setOnClickListener(doSignUp);
         signInButton = v.findViewById(R.id.signInButton);
