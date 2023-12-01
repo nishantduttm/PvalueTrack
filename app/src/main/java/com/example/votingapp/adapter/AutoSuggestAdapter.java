@@ -84,15 +84,20 @@ public class AutoSuggestAdapter extends ArrayAdapter
         protected void publishResults(CharSequence constraint, FilterResults results)
         {
             try {
-                List<String> filterList = (ArrayList) results.values;
-                if (results != null && results.count > 0) {
-                    filterList = new ArrayList<>(filterList);
-                    clear();
-                    for (String item : filterList) {
-                        add(item);
-                        notifyDataSetChanged();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<String> filterList = (ArrayList) results.values;
+                        if (results != null && results.count > 0) {
+                            filterList = new ArrayList<>(filterList);
+                            clear();
+                            for (String item : filterList) {
+                                add(item);
+                                notifyDataSetChanged();
+                            }
+                        }
                     }
-                }
+                }).start();
             }catch (UnsupportedOperationException  e){
                 log("info","publishResults: caught unsupported operation exception");
             }
