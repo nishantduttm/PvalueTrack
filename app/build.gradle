@@ -14,8 +14,8 @@ android {
         applicationId "com.example.votingapp"
         minSdk 24
         targetSdk 33
-        versionCode 34
-        versionName "1.2.30"
+        versionCode 35
+        versionName "1.2.31"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
