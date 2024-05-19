@@ -484,7 +484,7 @@ public class RoundUpdate extends BaseFragment {
         try {
             roundUpdate = new RoundUpdateBody();
             if (autoCompleteTextViews.isValidCandidateName() && autoCompleteTextViews.isValidACNameText() && autoCompleteTextViews.isValidPartyCode() && autoCompleteTextViews.isValidPartyName() && autoCompleteTextViews.isValidACText()) {
-                roundUpdate.setAssemblyConstitutionCode(Integer.parseInt(autoCompleteTextViews.getACCode()));
+                roundUpdate.setAssemblyConstitutionCode(autoCompleteTextViews.getACCode());
                 roundUpdate.setPartyCode(autoCompleteTextViews.getPartyCode());
                 roundUpdate.setCandidateCode(candidatesListHelper.findCandidateCodeByCandidateNameAndPartyCode(autoCompleteTextViews.getCandidateName(),autoCompleteTextViews.getPartyCode()));
                 roundUpdate.setElectionCode(electionCode);
@@ -502,12 +502,16 @@ public class RoundUpdate extends BaseFragment {
         if(autoCompleteTextViews == null){
             return;
         }
-        if(getRoundNo() >= 99){
-            roundNoTextView.setError("Round no is already 99");
+        if(getRoundNo() >= 90){
+            roundNoTextView.setError("Round no is already 90");
             return;
         }
         if (autoCompleteTextViews.getRoundNo() <= getRoundNo()) {
             roundNoTextView.setError("Round no must be greater than " + getRoundNo());
+            return;
+        }
+        if(autoCompleteTextViews.getRoundNo() > 90){
+            roundNoTextView.setError("Round no must be less than or equal to 90");
             return;
         }
         mProgressDialog.setMessage("Updating Round...Please Wait...");
