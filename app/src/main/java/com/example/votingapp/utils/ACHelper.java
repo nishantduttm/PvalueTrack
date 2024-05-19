@@ -26,7 +26,7 @@ public class ACHelper {
 
     public boolean isValidACName(String acName){
         for(AssemblyConstituency assemblyConstituency : assemblyConstituencies){
-            if(assemblyConstituency.getAcName().equals(acName)){
+            if(assemblyConstituency.getDisplayName().equals(acName)){
                 return true;
             }
         }
@@ -44,14 +44,14 @@ public class ACHelper {
     public List<String> getACNameList(){
         Set<String> acNameList = new HashSet<>();
         for(AssemblyConstituency assemblyConstituency : assemblyConstituencies){
-            acNameList.add(assemblyConstituency.getAcName());
+            acNameList.add(assemblyConstituency.getDisplayName());
         }
         return new ArrayList<>(acNameList);
     }
 
     public String findACCodeByACName(String acName){
         for(AssemblyConstituency assemblyConstituency : assemblyConstituencies){
-            if(assemblyConstituency.getAcName().equals(acName)){
+            if(assemblyConstituency.getDisplayName().equals(acName)){
                 return assemblyConstituency.getAcCode();
             }
         }
@@ -61,7 +61,7 @@ public class ACHelper {
     public String findACNameByACCode(String acCode){
         for(AssemblyConstituency assemblyConstituency : assemblyConstituencies){
             if(assemblyConstituency.getAcCode().equals(acCode)){
-                return assemblyConstituency.getAcName();
+                return assemblyConstituency.getDisplayName();
             }
         }
         return "";

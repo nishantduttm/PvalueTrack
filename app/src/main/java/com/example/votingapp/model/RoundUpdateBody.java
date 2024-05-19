@@ -1,7 +1,7 @@
 package com.example.votingapp.model;
 
 public class RoundUpdateBody {
-    private int assemblyConstituencyCode;
+    private String assemblyConstituencyCode;
     private int  round;
     private String partyCode;
     private int candidateCode;
@@ -10,7 +10,7 @@ public class RoundUpdateBody {
     public RoundUpdateBody() {
     }
 
-    public RoundUpdateBody(int assemblyConstitutionCode, int round, String partyCode, int candidateCode, String electionCode) {
+    public RoundUpdateBody(String assemblyConstitutionCode, int round, String partyCode, int candidateCode, String electionCode) {
         this.assemblyConstituencyCode = assemblyConstitutionCode;
         this.round = round;
         this.partyCode = partyCode;
@@ -18,11 +18,11 @@ public class RoundUpdateBody {
         this.electionCode = electionCode;
     }
 
-    public int getAssemblyConstitutionCode() {
+    public String getAssemblyConstitutionCode() {
         return assemblyConstituencyCode;
     }
 
-    public void setAssemblyConstitutionCode(int assemblyConstitutionCode) {
+    public void setAssemblyConstitutionCode(String assemblyConstitutionCode) {
         this.assemblyConstituencyCode = assemblyConstitutionCode;
     }
 
