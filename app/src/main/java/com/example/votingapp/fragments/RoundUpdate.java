@@ -35,6 +35,7 @@ import com.example.votingapp.utils.AuthHelper;
 import com.example.votingapp.utils.CandidatesListHelper;
 import com.example.votingapp.utils.KeyboardUtil;
 import com.example.votingapp.utils.PrefHelper;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
@@ -62,6 +63,9 @@ public class RoundUpdate extends BaseFragment {
     AutoCompleteTextView pCodeTextView;
     AutoCompleteTextView pNameTextView;
     AutoCompleteTextView candidateNameTextView;
+
+
+    Integer electionType;
 
 
     TextView roundNoLabel;
@@ -144,8 +148,22 @@ public class RoundUpdate extends BaseFragment {
         }
         new KeyboardUtil(getActivity(),view.findViewById(R.id.main_form));
         electionCode = passcode.getElectionCode();
+        electionType = passcode.getElectionType();
+        setUpElectionLabels();
         getACList();
         return view;
+    }
+
+    void setUpElectionLabels(){
+        TextInputLayout acCodeLabel = (TextInputLayout) view.findViewById(R.id.acCodeTextView);
+        TextInputLayout acNameLabel = (TextInputLayout) view.findViewById(R.id.acNameTextView);
+        if(electionType == 1){
+            acCodeLabel.setHint("PC Code");
+            acNameLabel.setHint("PC Name");
+        }else{
+            acCodeLabel.setHint("AC Code");
+            acNameLabel.setHint("AC Name");
+        }
     }
 
     @Override
