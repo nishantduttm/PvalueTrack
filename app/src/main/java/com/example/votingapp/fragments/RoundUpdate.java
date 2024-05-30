@@ -157,12 +157,15 @@ public class RoundUpdate extends BaseFragment {
     void setUpElectionLabels(){
         TextInputLayout acCodeLabel = (TextInputLayout) view.findViewById(R.id.acCodeTextView);
         TextInputLayout acNameLabel = (TextInputLayout) view.findViewById(R.id.acNameTextView);
+        TextView title = (TextView) view.findViewById(R.id.cardTitle);
         if(electionType == 1){
             acCodeLabel.setHint("PC Code");
             acNameLabel.setHint("PC Name");
+            title.setText("Parliamentry Constituency Details");
         }else{
             acCodeLabel.setHint("AC Code");
             acNameLabel.setHint("AC Name");
+            title.setText("Assembly Constituency Details");
         }
     }
 
