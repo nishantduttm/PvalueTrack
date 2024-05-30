@@ -7,12 +7,23 @@ public class Passcode {
     @SerializedName("electioncode")
     String electionCode;
 
+    @SerializedName("etype")
+    Integer electionType;
+
     public String getPasscode() {
         return passcode;
     }
 
     public void setPasscode(String passcode) {
         this.passcode = passcode;
+    }
+
+    public Integer getElectionType() {
+        return electionType;
+    }
+
+    public void setElectionType(Integer electionType) {
+        this.electionType = electionType;
     }
 
     @Override
